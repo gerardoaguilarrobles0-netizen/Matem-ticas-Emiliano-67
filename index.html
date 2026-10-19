@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GrafiQuiz · 1º de secundaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #102033;
+      --sheet: #183049;
+      --well: #0c1a2c;
+      --ink: #f4f7fb;
+      --muted: #b7c6d8;
+      --line: #2c4666;
+      --accent: #ffb703;
+      --accent-ink: #1c1403;
+      --good: #7dffa1;
+      --good-soft: #143528;
+      --bad: #ffb4a8;
+      --bad-soft: #3a1c22;
+      --barras: #ff8a3d; --barras-ink: #2a1204;
+      --circular: #ffe14a; --circular-ink: #2a2204;
+      --poligono: #3ddec8; --poligono-ink: #042824;
+      --rango: #ff6b6b; --rango-ink: #2a0808;
+      --media: #7eb6ff; --media-ink: #061428;
+      --moda: #ff7eb3; --moda-ink: #2a0816;
+      --mediana: #8ee86a; --mediana-ink: #06200c;
+      --c1: #ff8a3d; --c2: #3ddec8; --c3: #ffe14a; --c4: #ff7eb3; --c5: #7eb6ff;
+      --font-sans: "Outfit", system-ui, sans-serif;
+      --font-display: "Fraunces", Georgia, serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--font-sans);
+      background-color: var(--paper);
+      background-image:
+        linear-gradient(to right, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px);
+      background-size: 28px 28px;
+      line-height: 1.5;
+    }
+    h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; }
+    button { font-family: inherit; cursor: pointer; border: none; }
+    button:disabled { cursor: not-allowed; opacity: 0.5; }
+    :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .wrap { max-width: 48rem; margin: 0 auto; padding: 2rem 1rem; min-height: 100vh; display: flex; flex-direction: column; }
+    .header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--sheet); color: var(--ink); border-radius: 999px;
+      padding: 0.5rem 0.75rem; border: 1px solid var(--line);
+    }
+    .logo-icon {
+      width: 2.25rem; height: 2.25rem; border-radius: 999px;
+      background: var(--accent); color: var(--accent-ink);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-title { font-family: var(--font-display); font-size: 1.125rem; line-height: 1; display: block; }
+    .logo-sub { font-size: 0.75rem; color: var(--muted); }
+    .badge {
+      background: var(--sheet); border: 1px solid var(--line); border-radius: 999px;
+      padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 600;
+    }
+    .card {
+      background: var(--sheet); border: 1px solid var(--line); border-radius: 1.5rem;
+      padding: 1.25rem; color: var(--ink);
+    }
+    @media (min-width: 640px) { .card { padding: 1.75rem; } }
+    .title { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .muted { color: var(--muted); }
+    .input {
+      width: 100%; background: var(--well); border: 1px solid var(--line);
+      border-radius: 1rem; padding: 0.875rem 1rem; color: var(--ink);
+      font-size: 1rem; margin-top: 0.5rem;
+    }
+    .input::placeholder { color: var(--muted); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      min-height: 3rem; border-radius: 999px; padding: 0 1.25rem;
+      font-weight: 600; font-size: 1rem; transition: transform 0.1s;
+    }
+    .btn:active:not(:disabled) { transform: scale(0.98); }
+    .btn-accent { background: var(--accent); color: var(--accent-ink); }
+    .btn-ghost { background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
+    .btn-block { width: 100%; }
+    .topics { display: grid; gap: 0.75rem; margin-top: 1.25rem; }
+    @media (min-width: 640px) { .topics { grid-template-columns: 1fr 1fr; } }
+    .topic-btn {
+      text-align: left; background: var(--well); border: 1px solid var(--line);
+      border-radius: 1.25rem; padding: 1rem; color: var(--ink);
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .topic-btn:hover { border-color: var(--accent); }
+    .topic-chip {
+      display: inline-flex; border-radius: 999px; padding: 0.2rem 0.6rem;
+      font-size: 0.75rem; font-weight: 600; width: fit-content;
+    }
+    .tone-barras { background: var(--barras); color: var(--barras-ink); }
+    .tone-circular { background: var(--circular); color: var(--circular-ink); }
+    .tone-poligono { background: var(--poligono); color: var(--poligono-ink); }
+    .tone-rango { background: var(--rango); color: var(--rango-ink); }
+    .tone-media { background: var(--media); color: var(--media-ink); }
+    .tone-moda { background: var(--moda); color: var(--moda-ink); }
+    .tone-mediana { background: var(--mediana); color: var(--mediana-ink); }
+    .progress-wrap { margin-bottom: 1rem; }
+    .progress-bar {
+      height: 0.5rem; background: var(--well); border-radius: 999px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.25s; }
+    .progress-label { font-size: 0.875rem; color: var(--muted); margin-bottom: 0.35rem; display: flex; justify-content: space-between; }
+    .figure-box {
+      background: var(--well); border-radius: 1.25rem; padding: 0.75rem;
+      margin: 1rem 0; border: 1px solid var(--line);
+    }
+    .options { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1rem; }
+    .opt {
+      text-align: left; background: var(--well); border: 2px solid var(--line);
+      border-radius: 1rem; padding: 0.9rem 1rem; color: var(--ink); font-weight: 500;
+    }
+    .opt.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--well)); }
+    .opt.correct { border-color: var(--good); background: var(--good-soft); }
+    .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+    .opt:disabled { opacity: 1; }
+    .explain {
+      margin-top: 1rem; padding: 1rem; border-radius: 1rem;
+      background: var(--well); border: 1px solid var(--line); font-size: 0.95rem;
+    }
+    .actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem; }
+    @media (min-width: 640px) { .actions { flex-direction: row; } }
+    .actions .btn { flex: 1; }
+    .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding: 0.75rem; }
+    .chip {
+      width: 3rem; height: 3rem; border-radius: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+    }
+    .chip:nth-child(7n+1) { background: var(--barras); color: var(--barras-ink); }
+    .chip:nth-child(7n+2) { background: var(--circular); color: var(--circular-ink); }
+    .chip:nth-child(7n+3) { background: var(--poligono); color: var(--poligono-ink); }
+    .chip:nth-child(7n+4) { background: var(--media); color: var(--media-ink); }
+    .chip:nth-child(7n+5) { background: var(--moda); color: var(--moda-ink); }
+    .chip:nth-child(7n+6) { background: var(--mediana); color: var(--mediana-ink); }
+    .chip:nth-child(7n) { background: var(--rango); color: var(--rango-ink); }
+    table.fig { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+    table.fig th { color: var(--accent); padding: 0.5rem 0.75rem; font-weight: 600; }
+    table.fig td { padding: 0.5rem 0.75rem; border-top: 1px solid var(--line); }
+    table.fig td:last-child, table.fig th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .meme {
+      aspect-ratio: 1; width: 100%; border-radius: 1.5rem;
+      object-fit: cover; display: block;
+      border: 1px solid var(--line); margin-top: 1.25rem;
+    }
+    .meme-line { margin-top: 1rem; font-size: 1.05rem; color: var(--ink); }
+    .score-big { font-family: var(--font-display); font-size: 3rem; font-weight: 700; }
+    .record { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 0.35rem 0.75rem; font-size: 0.875rem; font-weight: 600; margin-top: 0.75rem; }
+    .miss-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+    .miss-item { border-top: 1px solid var(--line); padding-top: 1rem; }
+    .miss-item:first-child { border-top: none; padding-top: 0; }
+    .text-good { color: var(--good); }
+    .text-bad { color: var(--bad); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .gap-sm { margin-top: 0.5rem; }
+    .gap-md { margin-top: 1rem; }
+    .gap-lg { margin-top: 1.5rem; }
+    .stack { display: flex; flex-direction: column; gap: 1rem; }
+    .home-intro { font-size: 1.05rem; color: var(--muted); margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <div style="padding:2rem;color:#f4f7fb;font-family:system-ui,sans-serif">
+      <p>Cargando GrafiQuiz…</p>
+      <p style="color:#b7c6d8;font-size:0.9rem;margin-top:0.5rem">Si no aparece nada, abre este archivo con Chrome, Firefox o Edge (doble clic). No uses el Bloc de notas como visor.</p>
+    </div>
+  </div>
+  <noscript>
+    <div style="padding:2rem;color:#f4f7fb;font-family:system-ui,sans-serif;background:#102033;min-height:100vh">
+      <h1>GrafiQuiz</h1>
+      <p>Necesitas JavaScript activado para jugar.</p>
+    </div>
+  </noscript>
+
+  <script>
+(function () {
+  "use strict";
+
+  const STORAGE_KEY = "grafiquiz-v2";
+  const QUIZ_LENGTH = 8;
+  const TOPIC_LENGTH = 5;
+
+  const TOPIC_IDS = ["barras", "circular", "poligono", "rango", "media", "moda", "mediana"];
+
+  const TONES = {
+    barras: "tone-barras",
+    circular: "tone-circular",
+    poligono: "tone-poligono",
+    rango: "tone-rango",
+    media: "tone-media",
+    moda: "tone-moda",
+    mediana: "tone-mediana",
+  };
+
+  const TOPICS = [
+    { id: "barras", title: "Gráfica de barras", body: "Compara categorías. La barra más alta es la cantidad mayor.", figure: { kind: "bars", values: [4, 9, 6, 3], labels: ["Perro", "Gato", "Ave", "Pez"] } },
+    { id: "circular", title: "Gráfica circular", body: "Reparte un total en partes. El círculo completo es el 100%.", figure: { kind: "pie", slices: [{ label: "Fútbol", value: 10 }, { label: "Básquet", value: 6 }, { label: "Nado", value: 4 }] } },
+    { id: "poligono", title: "Polígono de frecuencias", body: "Une las frecuencias con una línea. El pico es el dato que más se repite.", figure: { kind: "polygon", values: [2, 5, 8, 4, 1], labels: ["0", "1", "2", "3", "4"] } },
+    { id: "rango", title: "Rango", body: "Dato mayor menos dato menor. Dice qué tan separados están.", figure: { kind: "chips", values: [3, 8, 1, 6] } },
+    { id: "media", title: "Media", body: "El promedio: suma todos los datos y divide entre cuántos son.", figure: { kind: "chips", values: [2, 4, 6, 8] } },
+    { id: "moda", title: "Moda", body: "El dato que más veces aparece. Si ninguno se repite, no hay moda.", figure: { kind: "chips", values: [5, 1, 5, 5, 2] } },
+    { id: "mediana", title: "Mediana", body: "Ordénalos y toma el del centro. Si sobran dos, promedia esos dos.", figure: { kind: "chips", values: [4, 1, 7, 3, 9] } },
+  ];
+
+  const MEME_IMAGES = {
+    legend: (
+      "data:image/jpeg;base64,"
+      + "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"
